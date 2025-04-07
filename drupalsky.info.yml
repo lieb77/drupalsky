@@ -4,3 +4,5 @@ description: 'Bluesky integration for Drupal'
 package: Custom
 core_version_requirement: ^10 || ^11
 configure: drupalsky.settings
+dependencies:
+  - key:key
