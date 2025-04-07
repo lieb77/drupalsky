@@ -1,0 +1,7 @@
+drupalsky.settings:
+  title: DrupalSky Settings
+  description: Configure DrupalSky
+  parent: system.admin_config_services
+  route_name: drupalsky.settings
+  weight: 10
+

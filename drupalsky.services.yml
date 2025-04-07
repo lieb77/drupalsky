@@ -1,0 +1,12 @@
+services:
+  Drupal\drupalsky\Hook\DrupalSkyHooks:
+    class: Drupal\drupalsky\Hook\DrupalSkyHooks
+    autowire: true
+
+  drupalsky.endpoints:
+    class: Drupal\drupalsky\EndPoints
+
+  drupalsky.service:
+    class: Drupal\drupalsky\DrupalSky
+    arguments: ['@logger.factory', '@config.factory', '@key.repository', '@http_client', '@drupalsky.endpoints']
+

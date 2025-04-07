@@ -1,0 +1,5 @@
+drupalsky.user:
+  title: Bluesky
+  route_name: drupalsky.home
+  base_route: entity.user.canonical
+  weight: -20
