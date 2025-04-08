@@ -1,0 +1,23 @@
+[data-component-id="drupalsky:bskyfeed"] {
+}
+
+.bsky-post{
+  max-width: 500px;
+  padding: 1em;
+  border-bottom: 1px solid #444;
+  margin: auto .5em;
+}
+
+.bsky-post .avatar {
+  max-width: 80px;
+  border-radius: 80px;
+}
+
+.bsky-ext {
+  border: 1px solid #aaa;
+  border-radius: 8px;
+}
+
+.bsky-thumb {
+  max-width: 100%;
+}

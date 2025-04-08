@@ -60,11 +60,12 @@ final class DrupalskyController extends ControllerBase {
    * Return a render array
    */
   public function feed(){
-    $feed = $this->service->getTimeLine();
+    $feed['feed'] = $this->service->getTimeLine();
 
     return [
-      '#theme' => 'feed',
-      '#feed'  => $feed,
+      '#type'       => 'component',
+			'#component'  => 'drupalsky:bskyfeed',
+			'#props'      =>  $feed,
     ];
   }
 
@@ -114,7 +115,6 @@ final class DrupalskyController extends ControllerBase {
     ];
   }
 
-
 	/**
 	 * Posts
 	 *
@@ -122,11 +122,12 @@ final class DrupalskyController extends ControllerBase {
    */
   public function posts(){
 
-    $feed = $this->service->getPosts();
+    $feed['feed'] = $this->service->getPosts();
 
     return [
-      '#theme' => 'feed',
-      '#feed'  => $feed,
+      '#type'       => 'component',
+			'#component'  => 'drupalsky:bskyfeed',
+			'#props'      =>  $feed,
     ];
   }
 

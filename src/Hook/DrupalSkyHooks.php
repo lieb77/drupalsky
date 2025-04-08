@@ -42,41 +42,6 @@ class DrupalSkyHooks {
   public function theme() {
 
 
-    $templates['followers'] =  [
-      'render element' => 'children',
-      'variables' => [
-        'followers' => [
-        	'follower' => [
-						'displayName' => 'displayName',
-						'handle'      => 'handle',
-						'avatar'      => 'avatar',
-						'description' => 'description',
-					],
-        ],
-      ],
-    ];
-
-
-    $templates['feed'] =  [
-      'render element' => 'children',
-      'variables' => [
-        'feed' => [
-        	'post' => [
-	        	'handle' => 'handle',
-  	        'name'   => 'avatar',
-    	      'text' 	 => 'text',
-    	      'date'	 => 'date',
-    	      'ext'	   => [
-    	      	'uri'     		=> 'uri',
-    	      	'title'   		=>  'title',
-    	      	'description' => 'description',
-    	      	'thumb'				=> 'thumbnail',
-    	      ],
-        	],
-        ],
-      ],
-    ];
-
     $templates['bskyform'] = [
    	 'render element' => 'form',
       'variables' => [
