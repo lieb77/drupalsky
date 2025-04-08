@@ -1,0 +1,24 @@
+[data-component-id="drupalsky:bskyfollowers"] {
+}
+
+.bsky-follower {
+  text-align: center;
+  margin-top: 1em;
+}
+
+.bsky-follower .col1 {
+  margin: 1em;
+  padding: 1em;
+}
+
+.bsky-follower .col2 {
+ margin: 1em 0;
+ padding: 1em 0;
+ text-align: left;
+}
+
+.bsky-follower .avatar {
+  max-width: 90px;
+  border-radius: 90px;
+}
+

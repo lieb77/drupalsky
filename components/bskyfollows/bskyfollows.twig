@@ -1,0 +1,29 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display profile.
+ *
+ * Available variables:
+ * - foo: Foo variable description.
+ *
+ * @see template_preprocess_profile()
+ *
+ * @ingroup themeable
+ * {{ devel_dump(profile) }}
+ */
+#}
+
+{% for follow in follows %}
+	<div class="bsky-follower row" >
+		<div class="col1 col-sm-3">
+			<img class="avatar" src="{{ follow.avatar }}" alt="Avatar" />
+		</div>
+
+		<div class="col2 col-sm-3">
+			<h2>{{ follow.displayName }}</h2>
+			<h4><a href="https://bsky.app/profile/{{ follower.handle }}" target="new">{{ follow.handle }}</a></h4>
+			<p>{{ follow.description }}<p>
+		</div>
+	</div>
+	<hr>
+{% endfor %}

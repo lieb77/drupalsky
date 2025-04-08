@@ -40,21 +40,7 @@ class DrupalSkyHooks {
    */
   #[Hook('theme')]
   public function theme() {
-    $templates['profile'] =  [
-      'render element' => 'children',
-      'variables' => [
-        'profile' => [
-          'displayName' => 'displayName',
-          'handle'      => 'handle',
-          'avatar'      => 'avatar',
-          'description' => 'description',
-          'banner'      => 'banner',
-          'followers'   => 'followersCount',
-          'follows'     => 'followsCount',
-          'posts'       => 'postsCount',
-        ],
-      ],
-    ];
+
 
     $templates['followers'] =  [
       'render element' => 'children',

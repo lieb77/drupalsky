@@ -40,12 +40,18 @@ final class DrupalskyController extends ControllerBase {
 	 */
 	public function home() {
 
+    // Get the Profile data
 		$profile = $this->service->getProfile();
 
+    // Add current user id to the Profile
+    // We needs this to build the links in the template
+    $profile['uid'] = $this->currentUser()->id();
+
 		return [
-			'#theme'    => 'profile',
-			'#profile'  => $profile,
-			];
+  		'#type'       => 'component',
+			'#component'  => 'drupalsky:bskyprofile',
+			'#props'      => $profile,
+		];
  }
 
 
@@ -83,11 +89,12 @@ final class DrupalskyController extends ControllerBase {
    * Return a render array
    */
   public function followers(){
-  	$followers = $this->service->getFollowers();
+  	$followers['followers'] = $this->service->getFollowers();
 
-  	return [
-      '#theme'      => 'followers',
-      '#followers'  => $followers,
+    return [
+  		'#type'       => 'component',
+			'#component'  => 'drupalsky:bskyfollowers',
+			'#props'      => $followers,
     ];
   }
 
@@ -98,11 +105,12 @@ final class DrupalskyController extends ControllerBase {
    * Not yet exposed in the SDK
    */
   public function following(){
-  	$follows = $this->service->getFollows();
+  	$follows['follows'] = $this->service->getFollows();
 
-  	return [
-      '#theme' => 'followers',
-      '#followers'  => $follows,
+  	   return [
+  		'#type'       => 'component',
+			'#component'  => 'drupalsky:bskyfollows',
+			'#props'      => $follows,
     ];
   }
 

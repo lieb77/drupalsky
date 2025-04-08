@@ -1,0 +1,33 @@
+'$schema': 'https://git.drupalcode.org/project/drupal/-/raw/10.1.x/core/modules/sdc/src/metadata.schema.json'
+name: BlueskyProfile
+status: stable
+description: Render a Bluesky Profile
+props:
+  type: object
+  properties:
+    uid:
+      type: number
+      title: User Id
+    displayName:
+      type: string
+      title: Display Name
+    handle:
+      type: string
+      title: Handle
+    banner:
+      type: string
+      title: Banner
+    followers:
+      type: number
+      title: Followers
+    follows:
+      type: number
+      title: Following
+    posts:
+      type: number
+      title: Posts
+    description:
+      type: string
+      title: Description
+
+

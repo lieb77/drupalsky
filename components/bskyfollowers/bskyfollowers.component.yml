@@ -1,0 +1,25 @@
+'$schema': 'https://git.drupalcode.org/project/drupal/-/raw/10.1.x/core/modules/sdc/src/metadata.schema.json'
+name: Bluesky Followers
+status: stable
+description: Render a Bluesky follower list
+props:
+  type: object
+  properties:
+    followers:
+      type: array
+      label: "Followers"
+      items:
+        displayName:
+          type: string
+          title: Display Name
+        handle:
+          type: string
+          title: Handle
+        avatar:
+          type: string
+          title: Avatar
+        description:
+          type: string
+          title: Description
+
+
