@@ -298,8 +298,8 @@ use Drupal\drupalsky\EndPoints;
     }
 
     return [
-      'author' => $post->author->displayName,
-      'avatar' => $post->author->avatar,
+      'author' => !empty($post->author->displayName) ? $post->author->displayName : "",
+      'avatar' => !empty($post->author->avatar) ? $post->author->avatar : null,
       'date'   => $this->getDate($post->record->createdAt),
       'text'   => $post->record->text,
       'url'  => $this->atUriToBskyAppUrl($post->uri),

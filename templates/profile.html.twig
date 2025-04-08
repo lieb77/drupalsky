@@ -24,15 +24,15 @@
   <div class="col-sm-5" style="margin: 1em 0; padding: 1em 0; text-align: left;">
     <h2>{{ profile.displayName }}</h2>
     <h4>{{ profile.handle }}</h4>
-    <p>{{ profile.followers }} <a href="/user/1/bluesky/followers">Followers</a>&nbsp;
-       {{ profile.follows }} <a href="/user/1/bluesky/following">Following</a>&nbsp;
-       {{ profile.posts }} <a href="/user/1/bluesky/posts">Posts</a></p>
+    <p>{{ profile.followers }} <a href="/user/{{ user.id }}/bluesky/followers">Followers</a>&nbsp;
+       {{ profile.follows }} <a href="/user/{{ user.id }}/bluesky/following">Following</a>&nbsp;
+       {{ profile.posts }} <a href="/user/{{ user.id }}/bluesky/posts">Posts</a></p>
     <p>{{ profile.description }}<p>
 
     <nav>
-    	<a href="/user/1/bluesky/feed">Feed</a>&nbsp;&nbsp;
-    	<a href="/user/1/bluesky/search">Search</a>&nbsp;&nbsp;
-    	<a href="/user/1/bluesky/post">Post</a>
+    	<a href="/user/{{ user.id }}/bluesky/feed">Feed</a>&nbsp;&nbsp;
+    	<a href="/user/{{ user.id }}/bluesky/search">Search</a>&nbsp;&nbsp;
+    	<a href="/user/{{ user.id }}/bluesky/post">Post</a>
     </nav>
 
   </div>

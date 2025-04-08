@@ -1,3 +1,11 @@
+drupalsky.settings:
+  path: '/admin/config/services/dskysettings'
+  defaults:
+    _title: 'DrupalSky Settings'
+    _form: 'Drupal\drupalsky\Form\SettingsForm'
+  requirements:
+    _permission: 'administer site configuration'
+
 drupalsky.home:
   path: '/user/{user}/bluesky'
   defaults:
@@ -13,14 +21,6 @@ drupalsky.feed:
     _controller: '\Drupal\drupalsky\Controller\DrupalskyController::feed'
   requirements:
     _permission: 'access content'
-
-drupalsky.settings:
-  path: '/admin/config/services/dskysettings'
-  defaults:
-    _title: 'DrupalSky Settings'
-    _form: 'Drupal\drupalsky\Form\SettingsForm'
-  requirements:
-    _permission: 'administer site configuration'
 
 drupalsky.search:
   path: '/user/{user}/bluesky/search'
@@ -63,7 +63,7 @@ drupalsky.posts:
     _permission: 'access content'
 
 drupalsky.thread:
-  path: '/user/{user}/bluesky/thread/{uri}'
+  path: '/bluesky/thread/{uri}'
   defaults:
     _title: "Bluesky Thread"
     _controller: '\Drupal\drupalsky\Controller\DrupalskyController::thread'
