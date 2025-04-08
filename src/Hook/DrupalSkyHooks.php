@@ -35,22 +35,6 @@ class DrupalSkyHooks {
     }
   }
 
-  /**
-   * Implements hook_theme()
-   */
-  #[Hook('theme')]
-  public function theme() {
-
-
-    $templates['bskyform'] = [
-   	 'render element' => 'form',
-      'variables' => [
-      	'form' => 'form',
-      ],
-    ];
-
-    return $templates;
-  }
 
   // End of class.
 }
