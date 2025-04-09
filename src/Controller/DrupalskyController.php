@@ -61,6 +61,7 @@ final class DrupalskyController extends ControllerBase {
    */
   public function feed(){
     $feed['feed'] = $this->service->getTimeLine();
+    $feed['uid']  = $this->currentUser()->id();
 
     return [
       '#type'       => 'component',
@@ -73,15 +74,18 @@ final class DrupalskyController extends ControllerBase {
   /**
    * thread
    *
-   * This looks really bogus
    */
   public function thread($uri){
-    $uri ="at%253A%252F%252Fdid%253Aplc%253A2cxgdrgtsmrbqnjkwyplmp43%252Fapp.bsky.feed.post%252F3llfevsz3hk2p";
-    $uri = urldecode(urldecode($uri));
     $thread = $this->service->getThread($uri);
+
+    $feed['uid']  = $this->currentUser()->id();
+    $feed['post'] = $thread['post'];
+    $feed['feed'] = $thread['replies'];
+
     return [
-      '#theme' => 'thread',
-      '#thread' => $thread
+      '#type'       => 'component',
+			'#component'  => 'drupalsky:bskyfeed',
+			'#props'      =>  $feed,
     ];
   }
 
@@ -121,8 +125,8 @@ final class DrupalskyController extends ControllerBase {
 	 * Return a render array
    */
   public function posts(){
-
     $feed['feed'] = $this->service->getPosts();
+    $feed['uid']  = $this->currentUser()->id();
 
     return [
       '#type'       => 'component',

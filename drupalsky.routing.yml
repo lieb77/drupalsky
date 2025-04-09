@@ -63,7 +63,7 @@ drupalsky.posts:
     _permission: 'access content'
 
 drupalsky.thread:
-  path: '/bluesky/thread/{uri}'
+  path: '/user/{user}/bluesky/thread/{uri}'
   defaults:
     _title: "Bluesky Thread"
     _controller: '\Drupal\drupalsky\Controller\DrupalskyController::thread'

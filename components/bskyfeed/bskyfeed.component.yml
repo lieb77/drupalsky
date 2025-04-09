@@ -5,6 +5,9 @@ description: Render a Bluesky follows list
 props:
   type: object
   properties:
+    uid:
+      type: number
+      title: UID
     feed:
       type: array
       label: "Feed"

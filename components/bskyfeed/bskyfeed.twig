@@ -12,11 +12,30 @@
  * {{ devel_dump(feed) }}
  */
 #}
+
 <div class="bsky-feed">
+
+  {% if post is not empty %}
+    <div class='bsky-post' >
+      <img class="avatar" alt="Avatar" src="{{ post.avatar }}" />
+      <p>{{ post.author }} on {{ post.date }}</p>
+      <p><a href="{{ post.url }}" target="new">Read post on Bluesky</a>
+      </p><p>{{ post.text }}</p>
+      {% if post.ext is not empty %}
+        <div class="bsky-ext"/>
+          <img class="bsky-thumb" src="{{ post.ext.thumb }}" alt="Image from post" >
+          <p><a href="{{post.ext.uri}}" target="new">{{ post.ext.title }}</a></p>
+          <p>{{ post.ext.description }}</p>
+        </div>
+      {% endif %}
+      </div>
+  {% endif %}
+
+  {% if feed is not empty %}
     {% for post in feed %}
       <div class='bsky-post' >
         {% if post.parent is not empty %}
-          <p><a href="{{ path('drupalsky.thread', {'uri': post.parent|url_encode}) }}">View Thread</a></p>
+          <p><a href="{{ path('drupalsky.thread', {'user': uid, 'uri': post.parent|url_encode}) }}">View Thread</a></p>
         {% endif %}
       	<img class="avatar" alt="Avatar" src="{{ post.avatar }}" />
 				<p>{{ post.author }} on {{ post.date }}</p>
@@ -32,5 +51,6 @@
 				{% endif %}
       </div>
    {% endfor %}
-
+  {% endif %}
 </div>
+

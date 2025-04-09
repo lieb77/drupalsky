@@ -10,6 +10,10 @@ use Drupal\key\KeyRepositoryInterface;
 use GuzzleHttp\ClientInterface;
 
 use Drupal\drupalsky\EndPoints;
+use Drupal\drupalsky\Model\Profile;
+use Drupal\drupalsky\Model\People;
+use Drupal\drupalsky\Model\Feed;
+use Drupal\drupalsky\Model\Thread;
 
 
 /**
@@ -108,38 +112,43 @@ use Drupal\drupalsky\EndPoints;
    * getProfile
    */
   public function getProfile(){
-    $profile  = [];
+
     $endpoint = $this->endpoints->getProfile();
     $query    = ['actor' => $this->handle];
+    $data     = $this->makeAuthCall($endpoint, $query);
 
-    if ($profile = $this->makeAuthCall($endpoint, $query)) {
-      $profile = array_merge(
-        $this->parseProfile($profile),
-        [
-          'banner'    => $profile->banner,
-          'followers' => $profile->followersCount,
-          'follows'   => $profile->followsCount,
-          'posts'     => $profile->postsCount,
-        ]);
-    }
-    return $profile;
+    $profile = new Profile($data);
+    return $profile->getProfile();
   }
 
- /**
-   * Parse profile
+  /**
+   * Get followers
    *
-   * Get's called from multiple places
    */
-  private function parseProfile($profile) {
+  public function getFollowers() {
 
-    return [
-      'displayName' => !empty($profile->displayName) ? $profile->displayName : "",
-      'handle'      => $profile->handle,
-      'avatar'      => !empty($profile->avatar) ? $profile->avatar : null,
-      'description' => !empty($profile->description) ? $profile->description : "",
-    ];
+    $endpoint  = $this->endpoints->getFollowers();
+    $query     = ['actor' => $this->handle];
+    $data      = $this->makeAuthCall($endpoint, $query);
+
+    $people = new People($data->followers);
+    return $people->getPeople();
   }
 
+  /**
+   * Get follows
+   *
+   */
+  public function getFollows() {
+
+    $endpoint = $this->endpoints->getFollows();
+    $query    = ['actor' => $this->handle];
+    $data      = $this->makeAuthCall($endpoint, $query);
+
+    $people = new People($data->follows);
+    return $people->getPeople();
+
+  }
 
 
   /**
@@ -147,35 +156,27 @@ use Drupal\drupalsky\EndPoints;
    */
   public function getTimeline(){
 
-    $feed = [];
     $endpoint = $this->endpoints->getTimeline();
     $query    = ['actor' => $this->handle];
+    $data     = $this->makeAuthCall($endpoint, $query);
 
-    if ($response = $this->makeAuthCall($endpoint, $query)) {
-      foreach ($response->feed as $item) {
-        $feed[] = $this->parsePost($item->post);
-      }
-    }
-    return $feed;
+    $feed = new Feed($data->feed);
+    return $feed->getFeed();
+
   }
 
-  /**
-   * getFeed
+ /**
+   * Get Posts
    *
-   * This needs a feed uri
    */
-  public function getFeed($uri){
+  public function getPosts() {
 
-    $feed = [];
-    $endpoint = $this->endpoints->getfeed();
-    $query    = ['feed' => $uri];
+    $endpoint = $this->endpoints->getAuthorFeed();
+    $query    = ['actor' => $this->handle];
+    $data     = $this->makeAuthCall($endpoint, $query);
 
-    if ($response = $this->makeAuthCall($endpoint, $query)) {
-      foreach ($response->feed as $item) {
-        $feed[] = $this->parsePost($item->post);
-      }
-    }
-    return $feed;
+    $feed = new Feed($data->feed);
+    return $feed->getFeed();
   }
 
 
@@ -189,86 +190,27 @@ use Drupal\drupalsky\EndPoints;
     $feed = [];
     $endpoint = $this->endpoints->searchPosts();
     $query    = ['q' => $keyword];
+    $data     = $this->makeAuthCall($endpoint, $query);
 
-    if ($response = $this->makeAuthCall($endpoint, $query)) {
-      foreach ($response->posts as $post) {
-          $feed[] = $this->parsePost($post);
-      }
-    }
-    return $feed;
+    $feed = new Feed($data->posts);
+    return $feed->getFeed();
   }
 
-
-  /**
-   * Get followers
-   *
-   */
-  public function getFollowers() {
-
-    $followers = [];
-    $endpoint  = $this->endpoints->getFollowers();
-    $query     = ['actor' => $this->handle];
-    if ($response = $this->makeAuthCall($endpoint, $query)) {
-      foreach($response->followers as $follower){
-        $followers[] = $this->parseProfile($follower);
-      }
-    }
-    return $followers;
-  }
-
-  /**
-   * Get follows
-   *
-   */
-  public function getFollows() {
-
-    $follows  = [];
-    $endpoint = $this->endpoints->getFollows();
-    $query    = ['actor' => $this->handle];
-    if ($response = $this->makeAuthCall($endpoint, $query)) {
-
-      foreach($response->follows as $follow){
-        $follows[] = $this->parseProfile($follow);
-      }
-    }
-    return $follows;
-  }
-
-
-
-  /**
-   * Get Posts
-   *
-   */
-  public function getPosts() {
-    $feed   = [];
-    $endpoint = $this->endpoints->getAuthorFeed();
-    $query    = ['actor' => $this->handle];
-
-    if ($response = $this->makeAuthCall($endpoint, $query)) {
-      foreach ($response->feed as $item) {
-        $feed[] = $this->parsePost($item->post);
-      }
-    }
-    return $feed;
-  }
 
 
   /**
    * Get thread
    *
    */
-  public function getThread($uri){
-    $thread   = [];
-    $endpoint = $this->endpoints->getPostThread();
-    $query    = ['actor' => $this->handle,'uri' => $uri ];
+  public function getThread($parent){
+    if (preg_match('/([^\/]+)\|([^\/]+)/', $parent, $matches)) {
+      $uri = "at://did:plc:" . $matches[1] . "/app.bsky.feed.post/" . $matches[2];
 
-    if ($response = $this->makeAuthCall($endpoint, $query)) {
-      $thread[] = $this->parsePost($response->thread->post);
-      foreach( $response->thread->replies as $reply) {
-        $thread[] = $this->parsePost($reply->post);
-      }
-      return($thread);
+      $endpoint = $this->endpoints->getPostThread();
+      $query    = ['actor' => $this->handle,'uri' => $uri ];
+      $data     = $this->makeAuthCall($endpoint, $query);
+      $feed = new Thread($data);
+      return $feed->getFeed();
     }
   }
 
@@ -356,40 +298,9 @@ use Drupal\drupalsky\EndPoints;
     return FLASE;
   }
 
-  /**
-   * Format date
-   *
-   */
-  private function getDate($date){
-    return date('M d, Y H:i', strtotime($date));
-  }
 
 
-	/**
-	 * Converts an AT URI for a Bluesky post to a https://bsky.app.
-	 *
-	 * @param atUri The AT URI of the post.  Must be in the format at://<DID>/<COLLECTION>/<RKEY>
-	 * @returns The HTTPS URL to view the post on bsky.app, or null if the AT URI is invalid or not a post.
-	 */
-	private function atUriToBskyAppUrl($uri) {
 
-	// at://did:plc:6aapcgkhjeffsdjc656mshnp/app.bsky.feed.post/3lhlw4gq4uj2t
-  // at://did:plc:xgiwtxbtt6xc7low5vdz7dq4/app.bsky.feed.post/3lj4wjx2gds2g"
-
-		$regex = "/^at:\/\/(did:plc:.+)\/(.+)\/(.+)$/";
-		$count = preg_match($regex, $uri, $matches);
-
-		$did        = $matches[1];
-		$collection = $matches[2];
-		$rkey       = $matches[3];
-
-		if ($collection === 'app.bsky.feed.post') {
-			return "https://bsky.app/profile/" . $did . "/post/" . $rkey;
-		}
-		else {
-			return null; // Not a post record
-		}
-	}
 
 // End of class
 }

@@ -19,7 +19,7 @@ final class SearchForm extends FormBase {
 	/**
    * The controller constructor.
    */
-  public function __construct(private DrupalSky $service) 
+  public function __construct(private DrupalSky $service)
   {}
 
   /**
@@ -57,13 +57,16 @@ final class SearchForm extends FormBase {
         '#value' => $this->t('Search'),
       ],
     ];
-    
+
     // Show results of last query
     if ($posts = $form_state->get('posts')) {
-			$build = [
-				'#theme' => 'feed',
-				'#feed'  => $posts,
-			];
+      $feed['feed'] = $posts;
+
+      $build = [
+        '#type'       => 'component',
+        '#component'  => 'drupalsky:bskyfeed',
+        '#props'      =>  $feed,
+      ];
 			$output = \Drupal::service('renderer')->render($build);
 			$form['posts'] = [
 				'#type'   =>  'item',
@@ -78,7 +81,7 @@ final class SearchForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state): void {
-   
+
 		if (mb_strlen($form_state->getValue('keyword')) < 2) {
 			$form_state->setErrorByName('keyword',
 			$this->t('Keyword should be at least 2 characters.'),
@@ -90,15 +93,15 @@ final class SearchForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
-  
+
   	if (!isset($this->service)){
   		$this->service = \Drupal::service('drupalsky.service');
   	}
-  
+
     $keyword = $form_state->getValue('keyword');
     $posts = $this->service->searchPosts($keyword);
     //dpm($posts);
-		$form_state->set('posts', $posts);  
+		$form_state->set('posts', $posts);
 		$form_state->setRebuild(TRUE);
   }
 
