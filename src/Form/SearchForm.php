@@ -6,8 +6,9 @@ namespace Drupal\drupalsky\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\drupalsky\DrupalSky;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+
+use Drupal\drupalsky\DrupalSky;
 
 
 /**
@@ -61,6 +62,7 @@ final class SearchForm extends FormBase {
     // Show results of last query
     if ($posts = $form_state->get('posts')) {
       $feed['feed'] = $posts;
+      $feed['uid']  = $this->currentUser()->id();
 
       $build = [
         '#type'       => 'component',
