@@ -8,5 +8,5 @@ services:
 
   drupalsky.service:
     class: Drupal\drupalsky\DrupalSky
-    arguments: ['@logger.factory', '@config.factory', '@key.repository', '@http_client', '@drupalsky.endpoints']
+    arguments: ['@logger.factory', '@config.factory', '@key.repository', '@http_client', '@tempstore.private', '@drupalsky.endpoints']
 

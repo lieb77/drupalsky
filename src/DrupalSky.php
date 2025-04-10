@@ -7,6 +7,7 @@ namespace Drupal\drupalsky;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\key\KeyRepositoryInterface;
+Use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use GuzzleHttp\ClientInterface;
 
 use Drupal\drupalsky\EndPoints;
@@ -26,28 +27,41 @@ use Drupal\drupalsky\Model\Thread;
    */
   protected $settings;      // Drupal\Core\Config\ConfigFactoryInterface
   protected $logger;        // Drupal\Core\Logger\LoggerChannelFactoryInterface
-  protected $key;           // Drupal\key\KeyRepositoryInterface
   protected $httpClient;    // GuzzleHttp\ClientInterface
   protected $endpoints;     // Drupal\drupalsky\EndPoints
   protected $handle;        // Bluesky identifier
   protected $session;       // session data
+  protected $tempstore;     // PrivateTempStoreFactory
   protected $baseUrl = "https://bsky.social";
 
   public function __construct(
     LoggerChannelFactoryInterface $loggerFactory,
-    ConfigFactoryInterface $configFactory,
-    KeyRepositoryInterface $keyRepository,
-    ClientInterface $http_client,
-    EndPoints $endpoints)
+    ConfigFactoryInterface        $configFactory,
+    KeyRepositoryInterface        $keyRepository,
+    ClientInterface               $http_client,
+    PrivateTempStoreFactory       $tempStore,
+    EndPoints                     $endpoints
+  )
   {
     $this->logger       = $loggerFactory->get('drupalsky');
     $this->endpoints    = $endpoints;
     $this->httpClient   = $http_client;
     $this->settings     = $configFactory->get('drupalsky.settings');
-    $this->handle       = $this->settings->get('handle');
-    $app_key_name       = $this->settings->get('app_key');
-    $this->key          = $keyRepository->getKey($app_key_name)->getKeyValue();
-    $this->session      = $this->createSession($this->handle, $this->key);
+    $this->tempstore    = $tempStore->get('drupalsky');
+
+    if ($session = $this->tempstore->get('session')) {
+      // Restore saved session
+      $this->handle  = $session->handle;
+      $this->session = $session;
+    }
+    else {
+      // Create new session
+      $this->handle   = $this->settings->get('handle');
+      $app_key_name   = $this->settings->get('app_key');
+      $key            = $keyRepository->getKey($app_key_name)->getKeyValue();
+      $this->session  = $this->createSession($this->handle, $key);
+    }
+    $this->tempstore->set('session', $this->session);
   }
 
   /**
