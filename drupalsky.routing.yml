@@ -69,3 +69,12 @@ drupalsky.thread:
     _controller: '\Drupal\drupalsky\Controller\DrupalskyController::thread'
   requirements:
     _permission: 'access content'
+
+drupalsky.logout:
+  path: '/user/{user}/bluesky/logout'
+  defaults:
+    _title: 'Bluesky Logout'
+    _controller: '\Drupal\drupalsky\Controller\DrupalskyController::logout'
+  requirements:
+    _permission: 'access content'
+

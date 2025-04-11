@@ -135,6 +135,20 @@ final class DrupalskyController extends ControllerBase {
     ];
   }
 
+  /**
+   * Logout
+   *
+   */
+  public function logout(){
+    $this->service->logout();
+
+    return [
+      '#type'   => 'item',
+      '#markup' => $this->t("Your Bluesky session has been cleared"),
+    ];
+  }
+
+
 
 // End of class
 }

@@ -16,6 +16,10 @@ class EndPoints {
 		return '/xrpc/com.atproto.server.createSession';
 	}
 
+	public function refreshSession() {
+	  return '/xrpc/com.atproto.server.refreshSession';
+	}
+
 	public function getProfile() {
 		return '/xrpc/app.bsky.actor.getProfile';
 	}

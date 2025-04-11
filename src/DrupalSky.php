@@ -48,15 +48,16 @@ use Drupal\drupalsky\Model\Thread;
     $this->httpClient   = $http_client;
     $this->settings     = $configFactory->get('drupalsky.settings');
     $this->tempstore    = $tempStore->get('drupalsky');
+    $this->handle       = $this->settings->get('handle');
+
+// $this->tempstore->delete('session');
 
     if ($session = $this->tempstore->get('session')) {
-      // Restore saved session
-      $this->handle  = $session->handle;
-      $this->session = $session;
+      // Refresh existing session
+      $this->session = $this->refreshSession($session);
     }
     else {
       // Create new session
-      $this->handle   = $this->settings->get('handle');
       $app_key_name   = $this->settings->get('app_key');
       $key            = $keyRepository->getKey($app_key_name)->getKeyValue();
       $this->session  = $this->createSession($this->handle, $key);
@@ -90,12 +91,29 @@ use Drupal\drupalsky\Model\Thread;
       ]);
 
     if ($request->getStatusCode() == 200) {
-      $this->logger->notice("Session opened");
+      $this->logger->info("Session opened");
       return json_decode($request->getBody()->getContents());
     }
     $this->logger->error("Create session got " . $request->getStatusCode());
     return FALSE;
   }
+
+  private function refreshSession($session) {
+    $request = $this->httpClient->post($this->baseUrl . $this->endpoints->refreshSession(),
+      [
+        'headers' => [
+          'Authorization' => "Bearer " . $session->refreshJwt
+        ],
+      ]);
+
+    if ($request->getStatusCode() == 200) {
+      $this->logger->info("Session refreshed");
+      return json_decode($request->getBody()->getContents());
+    }
+    $this->logger->error("Refresh session got " . $request->getStatusCode());
+    return FALSE;
+  }
+
 
   /**
    * Make authenticated call
@@ -121,6 +139,15 @@ use Drupal\drupalsky\Model\Thread;
     return FALSE;
   }
 
+  /**
+   * Logout
+   *
+   * Delete the saved session
+   */
+  public function logout(){
+    $this->tempstore->delete('session');
+    $this->logger->info("Session closed");
+  }
 
   /**
    * getProfile
