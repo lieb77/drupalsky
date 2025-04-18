@@ -7,22 +7,22 @@
   border-bottom: 4px solid #aaa;
 }
 
-.bsky-profile .banner {
+.bsky-banner {
   max-width: 80%;
 }
 
-.bsky-profile .avatar {
+.bsky-avatar {
   max-width: 160px;
   border-radius: 90px;
 }
 
-.bsky-profile .col1 {
+.bsky-col1 {
   margin: 1em;
   padding: 1em;
 }
 
 
-.bsky-profile .col2 {
+.bsky-col2 {
   margin: 1em 0;
   padding: 1em 0;
   text-align: left;
