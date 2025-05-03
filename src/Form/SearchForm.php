@@ -6,22 +6,19 @@ namespace Drupal\drupalsky\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 use Drupal\drupalsky\DrupalSky;
-
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a DrupalSky form.
  */
 final class SearchForm extends FormBase {
 
-
-	/**
+  /**
    * The controller constructor.
    */
-  public function __construct(private DrupalSky $service)
-  {}
+  public function __construct(private DrupalSky $service) {
+  }
 
   /**
    * {@inheritdoc}
@@ -31,7 +28,6 @@ final class SearchForm extends FormBase {
       $container->get('drupalsky.service'),
     );
   }
-
 
   /**
    * {@inheritdoc}
@@ -59,22 +55,22 @@ final class SearchForm extends FormBase {
       ],
     ];
 
-    // Show results of last query
+    // Show results of last query.
     if ($posts = $form_state->get('posts')) {
       $feed['feed'] = $posts;
-      $feed['uid']  = $this->currentUser()->id();
+      $feed['uid'] = $this->currentUser()->id();
 
       $build = [
-        '#type'       => 'component',
-        '#component'  => 'drupalsky:bskyfeed',
-        '#props'      =>  $feed,
+        '#type' => 'component',
+        '#component' => 'drupalsky:bskyfeed',
+        '#props' => $feed,
       ];
-			$output = \Drupal::service('renderer')->render($build);
-			$form['posts'] = [
-				'#type'   =>  'item',
-				'#markup' => $output,
-			];
-		}
+      $output = \Drupal::service('renderer')->render($build);
+      $form['posts'] = [
+        '#type' => 'item',
+        '#markup' => $output,
+      ];
+    }
 
     return $form;
   }
@@ -84,27 +80,27 @@ final class SearchForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state): void {
 
-		if (mb_strlen($form_state->getValue('keyword')) < 2) {
-			$form_state->setErrorByName('keyword',
-			$this->t('Keyword should be at least 2 characters.'),
-			);
-		}
-	}
+    if (\mb_strlen($form_state->getValue('keyword')) < 2) {
+      $form_state->setErrorByName('keyword',
+      $this->t('Keyword should be at least 2 characters.'),
+      );
+    }
+  }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
 
-  	if (!isset($this->service)){
-  		$this->service = \Drupal::service('drupalsky.service');
-  	}
+    if (!isset($this->service)) {
+      $this->service = \Drupal::service('drupalsky.service');
+    }
 
     $keyword = $form_state->getValue('keyword');
     $posts = $this->service->searchPosts($keyword);
-    //dpm($posts);
-		$form_state->set('posts', $posts);
-		$form_state->setRebuild(TRUE);
+    // dpm($posts);
+    $form_state->set('posts', $posts);
+    $form_state->setRebuild(TRUE);
   }
 
 }

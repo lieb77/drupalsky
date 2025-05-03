@@ -77,4 +77,3 @@ drupalsky.logout:
     _controller: '\Drupal\drupalsky\Controller\DrupalskyController::logout'
   requirements:
     _permission: 'access content'
-

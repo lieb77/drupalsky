@@ -29,5 +29,3 @@ props:
     description:
       type: string
       title: Description
-
-

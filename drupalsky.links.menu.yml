@@ -4,4 +4,3 @@ drupalsky.settings:
   parent: system.admin_config_services
   route_name: drupalsky.settings
   weight: 10
-

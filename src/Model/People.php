@@ -4,28 +4,32 @@ declare(strict_types=1);
 
 namespace Drupal\drupalsky\Model;
 
+/**
+ *
+ */
+
 class People {
 
   protected $people = [];
 
   public function __construct($data) {
 
-   foreach($data as $person){
+    foreach ($data as $person) {
       $this->people[] = [
         'displayName' => !empty($person->displayName) ? $person->displayName : "",
-        'handle'      => $person->handle,
-        'avatar'      => !empty($person->avatar) ? $person->avatar : null,
+        'handle' => $person->handle,
+        'avatar' => !empty($person->avatar) ? $person->avatar : NULL,
         'description' => !empty($person->description) ? $person->description : "",
       ];
     }
   }
 
   /**
-   * getProfile
+   * GetProfile.
    */
-  public function getPeople(){
-      return $this->people;
+  public function getPeople() {
+    return $this->people;
   }
 
-// end of class
+  // End of class.
 }

@@ -12,13 +12,12 @@
 }
 
 .bsky-follower .col2 {
- margin: 1em 0;
- padding: 1em 0;
- text-align: left;
+  margin: 1em 0;
+  padding: 1em 0;
+  text-align: left;
 }
 
 .bsky-follower .avatar {
   max-width: 90px;
   border-radius: 90px;
 }
-

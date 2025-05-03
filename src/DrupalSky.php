@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\drupalsky;
 
+use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\key\KeyRepositoryInterface;
@@ -23,7 +24,7 @@ use Drupal\drupalsky\Model\Thread;
  class DrupalSky{
 
   /**
-   * @var \Drupal\Core\Config\ImmutableConfig Module configuration.
+   * @var ImmutableConfig Module configuration.
    */
   protected $settings;      // Drupal\Core\Config\ConfigFactoryInterface
   protected $logger;        // Drupal\Core\Logger\LoggerChannelFactoryInterface
@@ -95,7 +96,7 @@ use Drupal\drupalsky\Model\Thread;
       return json_decode($request->getBody()->getContents());
     }
     $this->logger->error("Create session got " . $request->getStatusCode());
-    return FALSE;
+    return false;
   }
 
   private function refreshSession($session) {
@@ -111,7 +112,7 @@ use Drupal\drupalsky\Model\Thread;
       return json_decode($request->getBody()->getContents());
     }
     $this->logger->error("Refresh session got " . $request->getStatusCode());
-    return FALSE;
+    return false;
   }
 
 

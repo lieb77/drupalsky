@@ -9,18 +9,16 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\drupalsky\DrupalSky;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-
 /**
  * Provides a DrupalSky form.
  */
 final class PostForm extends FormBase {
 
-
-	/**
+  /**
    * The controller constructor.
    */
-  public function __construct(private DrupalSky $service)
-  {}
+  public function __construct(private DrupalSky $service) {
+  }
 
   /**
    * {@inheritdoc}
@@ -30,7 +28,6 @@ final class PostForm extends FormBase {
       $container->get('drupalsky.service'),
     );
   }
-
 
   /**
    * {@inheritdoc}
@@ -45,23 +42,20 @@ final class PostForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state): array {
 
     $form['body'] = [
-			'#type' => 'text_format',
-			'#title' => $this->t('Body'),
-		];
+      '#type' => 'text_format',
+      '#title' => $this->t('Body'),
+    ];
 
-		$form['link'] = [
-			'#type'		=> 'url',
-			'#title'  => $this->t("Add link"),
-			'#size'		=> 32
-		];
+    $form['link'] = [
+      '#type' => 'url',
+      '#title' => $this->t("Add link"),
+      '#size' => 32,
+    ];
 
-  	$form['file'] = [
-			'#type'		=> 'file',
-			'#title'  => $this->t("Attach image"),
-		];
-
-
-
+    $form['file'] = [
+      '#type' => 'file',
+      '#title' => $this->t("Attach image"),
+    ];
 
     $form['actions'] = [
       '#type' => 'actions',
@@ -71,7 +65,6 @@ final class PostForm extends FormBase {
       ],
     ];
 
-
     return $form;
   }
 
@@ -79,27 +72,27 @@ final class PostForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state): void {
-   	$body = $form_state->getValue('body');
+    $body = $form_state->getValue('body');
 
- 		if (mb_strlen($body['value']) > 300) {
-			$form_state->setErrorByName('body',
-					$this->t('Bluesky posts have to be <= 300 characters.'),
-			);
-		}
+    if (\mb_strlen($body['value']) > 300) {
+      $form_state->setErrorByName('body',
+      $this->t('Bluesky posts have to be <= 300 characters.'),
+      );
+    }
 
-	}
+  }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
 
-  	if (!isset($this->service)){
-  		$this->service = \Drupal::service('drupalsky.service');
-  	}
-  dpm($form_state->getValues());
+    if (!isset($this->service)) {
+      $this->service = \Drupal::service('drupalsky.service');
+    }
+    \dpm($form_state->getValues());
 
-		$form_state->setRebuild(TRUE);
+    $form_state->setRebuild(TRUE);
   }
 
 }

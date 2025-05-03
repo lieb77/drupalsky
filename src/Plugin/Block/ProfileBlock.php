@@ -5,14 +5,11 @@ namespace Drupal\drupalsky\Plugin\Block;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\drupalsky\DrupalSky;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
 
 /**
  * Provides a 'Hello' Block.
  */
-
 #[Block(
   id: "dksy_profile_block",
   admin_label: new TranslatableMarkup("Bluesky Profile"),
@@ -20,47 +17,46 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 )]
 class ProfileBlock extends BlockBase {
 
-/*
-	public function __construct(
-	 		array $configuration,
-      $plugin_id,
-      $plugin_definition,
-      protected DrupalSky $service) {
-	 parent::__construct($configuration, $plugin_id, $plugin_definition);
+  /*
+  public function __construct(
+  array $configuration,
+  $plugin_id,
+  $plugin_definition,
+  protected DrupalSky $service) {
+  parent::__construct($configuration, $plugin_id, $plugin_definition);
 
 
-	}
-*/
+  }
+   */
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container,
+  public static function create(
+    ContainerInterface $container,
     array $configuration,
     $plugin_id,
-    $plugin_definition): static {
+    $plugin_definition,
+  ): static {
     $instance = new static($configuration, $plugin_id, $plugin_definition);
-  	$instance->dskyService = $container->get('drupalsky.service');
+    $instance->dskyService = $container->get('drupalsky.service');
     return $instance;
   }
-
-
 
   /**
    * {@inheritdoc}
    */
   public function build() {
 
-  	if (!isset($this->dskyService)){
-  		$this->dskyService = \Drupal::service('drupalsky.service');
-  	}
+    if (!isset($this->dskyService)) {
+      $this->dskyService = \Drupal::service('drupalsky.service');
+    }
 
+    $profile = $this->dskyService->getProfile();
 
-  	$profile = $this->dskyService->getProfile();
-
-     $render_array = [
-      '#theme'    => 'profile',
-      '#profile'  => $profile,
+    $render_array = [
+      '#theme' => 'profile',
+      '#profile' => $profile,
     ];
 
     return $render_array;

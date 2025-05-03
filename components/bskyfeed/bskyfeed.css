@@ -1,7 +1,7 @@
 [data-component-id="drupalsky:bskyfeed"] {
 }
 
-.bsky-post{
+.bsky-post {
   max-width: 500px;
   padding: 1em;
   border-bottom: 1px solid #444;
