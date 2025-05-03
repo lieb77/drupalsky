@@ -11,56 +11,58 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a 'Hello' Block.
  */
 #[Block(
-  id: "dksy_profile_block",
-  admin_label: new TranslatableMarkup("Bluesky Profile"),
-  category: new TranslatableMarkup("DrupalSky block")
+    id: "dksy_profile_block",
+    admin_label: new TranslatableMarkup("Bluesky Profile"),
+    category: new TranslatableMarkup("DrupalSky block")
 )]
-class ProfileBlock extends BlockBase {
+class ProfileBlock extends BlockBase
+{
 
-  /*
-  public function __construct(
-  array $configuration,
-  $plugin_id,
-  $plugin_definition,
-  protected DrupalSky $service) {
-  parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-
-  }
-   */
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(
-    ContainerInterface $container,
+    /*
+    public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-  ): static {
-    $instance = new static($configuration, $plugin_id, $plugin_definition);
-    $instance->dskyService = $container->get('drupalsky.service');
-    return $instance;
-  }
+    protected DrupalSky $service) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-  /**
-   * {@inheritdoc}
-   */
-  public function build() {
 
-    if (!isset($this->dskyService)) {
-      $this->dskyService = \Drupal::service('drupalsky.service');
+    }
+    */
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function create(
+        ContainerInterface $container,
+        array $configuration,
+        $plugin_id,
+        $plugin_definition,
+    ): static {
+        $instance = new static($configuration, $plugin_id, $plugin_definition);
+        $instance->dskyService = $container->get('drupalsky.service');
+        return $instance;
     }
 
-    $profile = $this->dskyService->getProfile();
+    /**
+     * {@inheritdoc}
+     */
+    public function build()
+    {
 
-    $render_array = [
-      '#theme' => 'profile',
-      '#profile' => $profile,
-    ];
+        if (!isset($this->dskyService)) {
+            $this->dskyService = \Drupal::service('drupalsky.service');
+        }
 
-    return $render_array;
+        $profile = $this->dskyService->getProfile();
 
-  }
+        $render_array = [
+        '#theme' => 'profile',
+        '#profile' => $profile,
+        ];
+
+        return $render_array;
+
+    }
 
 }

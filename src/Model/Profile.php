@@ -8,29 +8,32 @@ namespace Drupal\drupalsky\Model;
  *
  */
 
-class Profile {
+class Profile
+{
 
-  protected $profile;
+    protected $profile;
 
-  public function __construct($data) {
-    $this->profile = [
-      'displayName' => !empty($data->displayName) ? $data->displayName : "",
-      'handle' => $data->handle,
-      'avatar' => !empty($data->avatar) ? $data->avatar : NULL,
-      'description' => !empty($data->description) ? $data->description : "",
-      'banner' => $data->banner,
-      'followers' => $data->followersCount,
-      'follows' => $data->followsCount,
-      'posts' => $data->postsCount,
-    ];
-  }
+    public function __construct($data)
+    {
+        $this->profile = [
+        'displayName' => !empty($data->displayName) ? $data->displayName : "",
+        'handle' => $data->handle,
+        'avatar' => !empty($data->avatar) ? $data->avatar : null,
+        'description' => !empty($data->description) ? $data->description : "",
+        'banner' => $data->banner,
+        'followers' => $data->followersCount,
+        'follows' => $data->followsCount,
+        'posts' => $data->postsCount,
+        ];
+    }
 
-  /**
-   * GetProfile.
-   */
-  public function getProfile() {
-    return $this->profile;
-  }
+    /**
+     * GetProfile.
+     */
+    public function getProfile()
+    {
+        return $this->profile;
+    }
 
-  // End of class.
+    // End of class.
 }

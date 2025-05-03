@@ -10,16 +10,18 @@ use Drupal\Core\Hook\Attribute\Hook;
 /**
  *
  */
-class DrupalSkyHooks {
+class DrupalSkyHooks
+{
 
-  /**
-   * Implements hook_help().
-   */
-  #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
-    switch ($route_name) {
-      case 'help.page.drupalsky':
-        $output  = <<<EOF
+    /**
+     * Implements hook_help().
+     */
+    #[Hook('help')]
+    public function help($route_name, RouteMatchInterface $route_match)
+    {
+        switch ($route_name) {
+        case 'help.page.drupalsky':
+            $output  = <<<EOF
           <h2>DrupalSky Help</h2>
           <p>This module provides integration with Bluesky.</p>
           <h3>Setup</h3>
@@ -31,10 +33,10 @@ class DrupalSkyHooks {
           </ol>
         EOF;
 
-        return $output;
+            return $output;
+        }
     }
-  }
 
 
-  // End of class.
+    // End of class.
 }

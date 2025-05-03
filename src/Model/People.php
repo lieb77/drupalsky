@@ -8,28 +8,31 @@ namespace Drupal\drupalsky\Model;
  *
  */
 
-class People {
+class People
+{
 
-  protected $people = [];
+    protected $people = [];
 
-  public function __construct($data) {
+    public function __construct($data)
+    {
 
-    foreach ($data as $person) {
-      $this->people[] = [
-        'displayName' => !empty($person->displayName) ? $person->displayName : "",
-        'handle' => $person->handle,
-        'avatar' => !empty($person->avatar) ? $person->avatar : NULL,
-        'description' => !empty($person->description) ? $person->description : "",
-      ];
+        foreach ($data as $person) {
+            $this->people[] = [
+            'displayName' => !empty($person->displayName) ? $person->displayName : "",
+            'handle' => $person->handle,
+            'avatar' => !empty($person->avatar) ? $person->avatar : null,
+            'description' => !empty($person->description) ? $person->description : "",
+            ];
+        }
     }
-  }
 
-  /**
-   * GetProfile.
-   */
-  public function getPeople() {
-    return $this->people;
-  }
+    /**
+     * GetProfile.
+     */
+    public function getPeople()
+    {
+        return $this->people;
+    }
 
-  // End of class.
+    // End of class.
 }
