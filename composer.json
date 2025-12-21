@@ -1,0 +1,21 @@
+{
+    "name": "drupal/drupalsky",
+    "description": "ATProto client for Drupal",
+    "type": "drupal-custom-module",
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "Drupal\\drupalsky\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Paul Lieberman",
+            "email": "lieb@orchardware.net"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+    	"php": ">=8.2"
+    }
+}
