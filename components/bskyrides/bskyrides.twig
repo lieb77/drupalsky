@@ -1,0 +1,32 @@
+{#
+/**
+ *
+ */
+#}
+<div class="bsky-rides">
+  {% if rides is not empty %}
+  	<table>
+  		<thead>
+  			<tr>
+  				<th>Route</th>
+  				<th>Date</th>
+  				<th>Miles</th>
+  				<th>Bike</th>
+  				<th>Notes</th>
+  			</tr>
+  		</thead>
+  		<tbody>
+			{% for ride in rides  %}
+				<tr>
+					<td>{{ ride.route }}</td>
+					<td>{{ ride.date|date("M j, Y") }}</td>
+					<td>{{ ride.miles }}</td>
+					<td>{{ ride.bike }}</td>
+					<td>{{ ride.body }}</td>
+				</tr>
+		   {% endfor %}
+   		</tbody>
+   	</table>
+  {% endif %}
+</div>
+

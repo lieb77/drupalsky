@@ -8,7 +8,7 @@
 }
 
 .bsky-banner {
-  max-width: 80%;
+  max-width: 80% !important;
 }
 
 .bsky-avatar {

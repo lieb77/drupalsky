@@ -1,7 +1,7 @@
 services:
   Drupal\drupalsky\Hook\DrupalSkyHooks:
     class: Drupal\drupalsky\Hook\DrupalSkyHooks
-    autowire: true
+    arguments: ['@drupalsky.pdsreposervice']
 
   drupalsky.endpoints:
     class: Drupal\drupalsky\EndPoints
@@ -9,3 +9,15 @@ services:
   drupalsky.service:
     class: Drupal\drupalsky\DrupalSky
     arguments: ['@logger.factory', '@config.factory', '@key.repository', '@http_client', '@tempstore.private', '@drupalsky.endpoints']
+
+  drupalsky.atprotoservice:
+    class: Drupal\drupalsky\AtprotoClientService
+    arguments: ['@logger.factory', '@config.factory', '@key.repository', '@http_client', '@tempstore.private', '@drupalsky.endpoints']
+
+  drupalsky.bskyservice:
+    class: Drupal\drupalsky\BlueskyContentService
+    arguments: ['@drupalsky.atprotoservice', '@drupalsky.endpoints']
+
+  drupalsky.pdsreposervice:
+    class: Drupal\drupalsky\PdsRepositoryService
+    arguments: ['@drupalsky.atprotoservice', '@drupalsky.endpoints']

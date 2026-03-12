@@ -91,7 +91,7 @@ final class PostForm extends FormBase {
     if (!isset($this->service)) {
       $this->service = \Drupal::service('drupalsky.service');
     }
-    \dpm($form_state->getValues());
+    //dpm($form_state->getValues());
 
     $form_state->setRebuild(TRUE);
   }

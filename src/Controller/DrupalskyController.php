@@ -6,32 +6,29 @@ namespace Drupal\drupalsky\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Logger\LoggerChannelInterface;
-use Drupal\drupalsky\DrupalSky;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\drupalsky\BlueskyContentService;
 
 /**
  * Returns responses for Drupalsky routes.
  */
 final class DrupalskyController extends ControllerBase {
 
-  /**
-   * The controller constructor.
-   */
-  public function __construct(
-    private LoggerChannelInterface $loggerChannelDefault,
-    private DrupalSky $service,
-  ) {
-  }
+	/**
+	* The controller constructor.
+	*/
+	public function __construct(
+		private BlueskyContentService $service,
+	){} 
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container): self {
-    return new self(
-          $container->get('logger.channel.default'),
-          $container->get('drupalsky.service'),
-      );
-  }
+	/**
+	* {@inheritdoc}
+	*/
+	public static function create(ContainerInterface $container): self {
+		return new self(
+			$container->get('drupalsky.bskyservice'),
+		);
+	}
 
   /**
    * Profile.
@@ -129,6 +126,23 @@ final class DrupalskyController extends ControllerBase {
       '#props' => $feed,
     ];
   }
+  
+  /**
+   * Rides.
+   *
+   * Return a render array.
+   */
+  public function rides() {
+    $rides  = $this->service->getRides();
+	
+    return [
+      '#type' => 'component',
+      '#component' => 'drupalsky:bskyrides',
+      '#props' => ['rides' => $rides],
+    ];
+  }
+  
+  
 
   /**
    * Logout.

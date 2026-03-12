@@ -22,6 +22,14 @@ drupalsky.feed:
   requirements:
     _permission: 'access content'
 
+drupalsky.rides:
+  path: '/user/{user}/bluesky/rides'
+  defaults:
+    _title: 'Bluesky Rides'
+    _controller: '\Drupal\drupalsky\Controller\DrupalskyController::rides'
+  requirements:
+    _permission: 'access content'
+
 drupalsky.search:
   path: '/user/{user}/bluesky/search'
   defaults:
