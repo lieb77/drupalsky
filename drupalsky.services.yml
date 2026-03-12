@@ -6,18 +6,17 @@ services:
   drupalsky.endpoints:
     class: Drupal\drupalsky\EndPoints
 
-  drupalsky.service:
-    class: Drupal\drupalsky\DrupalSky
-    arguments: ['@logger.factory', '@config.factory', '@key.repository', '@http_client', '@tempstore.private', '@drupalsky.endpoints']
-
   drupalsky.atprotoservice:
     class: Drupal\drupalsky\AtprotoClientService
+    lazy: true
     arguments: ['@logger.factory', '@config.factory', '@key.repository', '@http_client', '@tempstore.private', '@drupalsky.endpoints']
 
   drupalsky.bskyservice:
     class: Drupal\drupalsky\BlueskyContentService
+    lazy: true
     arguments: ['@drupalsky.atprotoservice', '@drupalsky.endpoints']
 
   drupalsky.pdsreposervice:
     class: Drupal\drupalsky\PdsRepositoryService
+    lazy: true
     arguments: ['@drupalsky.atprotoservice', '@drupalsky.endpoints']
