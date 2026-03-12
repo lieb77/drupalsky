@@ -1,16 +1,17 @@
 ## INTRODUCTION
 
-The DrupalSky module is a DESCRIBE_THE_MODULE_HERE.
+The DrupalSky module is a bridge between Drupal and Bluesky.
 
 The primary use case for this module is:
 
-- Use case #1
-- Use case #2
-- Use case #3
+- View Bluesky data in Drupal
+- Post to Bluesky from Drupal
 
 ## REQUIREMENTS
 
-DESCRIBE_MODULE_DEPENDENCIES_HERE
+Drupal 10/11
+Keys
+Does not depend on potibm/phluesky - implements ATProto calls directly in module
 
 ## INSTALLATION
 
@@ -18,12 +19,11 @@ Install as you would normally install a contributed Drupal module.
 See: https://www.drupal.org/node/895232 for further information.
 
 ## CONFIGURATION
-- Configuration step #1
-- Configuration step #2
-- Configuration step #3
+- Create a key with your Bluesky App Passworf
+- Configuration the module with your handle and the key
 
 ## MAINTAINERS
 
-Current maintainers for Drupal 10:
+Current maintainers for Drupal 11:
 
-- FIRST_NAME LAST_NAME (NICKNAME) - https://www.drupal.org/u/NICKNAME
+- Paul Lieberman lieb - https://www.drupal.org/u/lieb
