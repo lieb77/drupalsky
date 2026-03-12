@@ -13,29 +13,31 @@
  */
 #}
 
-<div class="bsky-profile row">
+<div class="bsky-wrapper">
 
-  <img class="bsky-banner" src="{{ banner }}" alt="banner" />
-
-  <div class="bsky-col1 col-sm-5">
-    <img class="bsky-avatar" src="{{ avatar }}" alt="Avatar" />
-  </div>
-
-  <div class="bsky-col2 col-sm-5" >
-    <h2>{{ displayName }}</h2>
-    <h4>{{ handle }}</h4>
-    <p>{{ followers }} <a href="/user/{{ uid }}/bluesky/followers">Followers</a>&nbsp;
-       {{ follows }} <a href="/user/{{ uid }}/bluesky/following">Following</a>&nbsp;
-       {{ posts }} <a href="/user/{{ uid }}/bluesky/posts">Posts</a></p>
-    <p>{{ description }}<p>
-
-    <nav>
-        <a href="/user/{{ uid }}/bluesky/rides">Rides</a>&nbsp;&nbsp;
-    	<a href="/user/{{ uid }}/bluesky/feed">Feed</a>&nbsp;&nbsp;
-    	<a href="/user/{{ uid }}/bluesky/search">Search</a>&nbsp;&nbsp;
-    	<a href="/user/{{ uid }}/bluesky/post">Post</a>&nbsp;&nbsp;&nbsp;&nbsp;
-    	<a href="/user/{{ uid }}/bluesky/logout">Logout</a>
-    </nav>
-
-  </div>
-</div>
+	<div class="bsky-banner" style="background-image: url({{ banner }}); ">
+	</div>
+	
+	<div class="bsky-profile">
+	
+		<div>
+			<img class="bsky-avatar" src="{{ avatar }}" alt="Avatar" />
+		</div>
+		
+		<div class="bsky-info">
+			<h4>{{ displayName }}</h4>
+			<h4>{{ handle }}</h4>
+			<p>{{ followers }} <a href="/user/{{ uid }}/bluesky/followers">Followers</a>&nbsp;
+			{{ follows }} <a href="/user/{{ uid }}/bluesky/following">Following</a>&nbsp;
+			{{ posts }} <a href="/user/{{ uid }}/bluesky/posts">Posts</a></p>
+			<p>{{ description }}<p>
+		</div>
+	</div>
+	<nav>
+		<a href="/user/{{ uid }}/bluesky/rides">Rides</a>&nbsp;&nbsp;
+		<a href="/user/{{ uid }}/bluesky/feed">Feed</a>&nbsp;&nbsp;
+		<a href="/user/{{ uid }}/bluesky/search">Search</a>&nbsp;&nbsp;
+		<a href="/user/{{ uid }}/bluesky/post">Post</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="/user/{{ uid }}/bluesky/logout">Logout</a>
+	</nav>
+<div>
