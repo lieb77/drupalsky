@@ -23,7 +23,7 @@ class AtprotoClientService {
      * @var 
      *
      */
-	protected LoggerChannelInterface $logger;
+	protected $logger;
 	protected $settings; // Immutable settings snapshot
 	protected ?string $did;
 	protected ?string $handle;
