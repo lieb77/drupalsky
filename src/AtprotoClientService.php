@@ -23,42 +23,39 @@ class AtprotoClientService {
      * @var 
      *
      */
-    protected $settings;      // Drupal\Core\Config\ConfigFactoryInterface
-    protected $configFactory; // Drupal\Core\Config\ConfigFactoryInterface
-    protected $logger;        // Drupal\Core\Logger\LoggerChannelFactoryInterface
-    protected $httpClient;    // GuzzleHttp\ClientInterface
-    protected $endpoints;     // Drupal\drupalsky\EndPoints
-    protected $handle;        // Bluesky identifier
-    protected $did;			  // Atproto identifier
-    protected $session;       // session data
-    protected $tempstore;     // PrivateTempStoreFactory
-    
-    // Must hard code the pdsUrl 
-   // protected $pdsUrl = "https://bsky.social";
-    protected $pdsUrl = "https://banjo.paullieberman.org";
-
-    public function __construct(
-        LoggerChannelFactoryInterface $loggerFactory,
-        ConfigFactoryInterface        $configFactory,
-        KeyRepositoryInterface        $keyRepository,
-        ClientInterface               $http_client,
-        PrivateTempStoreFactory       $tempStore,
-        EndPoints                     $endpoints
-    ) {
-    	$this->configFactory = $configFactory;
-        $this->logger        = $loggerFactory->get('drupalsky');
-        $this->endpoints     = $endpoints;
-        $this->httpClient    = $http_client;
-        $this->settings      = $configFactory->get('drupalsky.settings');
-        $this->tempstore     = $tempStore->get('drupalsky');
-        $this->handle        = $this->settings->get('handle');
-		$this->did           = $this->settings->get('did');
-		if (empty($this->did)){
+	protected LoggerChannelInterface $logger;
+	protected $settings; // Immutable settings snapshot
+	protected ?string $did;
+	protected ?string $handle;
+	protected $session = null;
+	protected $tempstore;
+	protected string $pdsUrl = "https://banjo.paullieberman.org";
+	
+	public function __construct(
+		protected LoggerChannelFactoryInterface $loggerFactory,
+		protected ConfigFactoryInterface       $configFactory,
+		protected KeyRepositoryInterface       $keyRepository,
+		protected ClientInterface              $httpClient,
+		PrivateTempStoreFactory                $tempStore,
+		protected EndPoints                    $endpoints
+		) {
+			$this->logger    = $loggerFactory->get('drupalsky');
+			$this->tempstore = $tempStore->get('drupalsky');
+			
+			// Use the Factory to get our immutable settings
+			$this->settings = $this->configFactory->get('drupalsky.settings');
+			
+			$this->handle = $this->settings->get('handle');
+			$this->did    = $this->settings->get('did');
+			
+			// Lazy-resolve DID if missing
+			if (empty($this->did) && !empty($this->handle)) {
 			$this->did = $this->getDidForHandle($this->handle);
-			$this->saveDid($this->did);
-		}		
-    }
-
+			if ($this->did) {
+				$this->saveDid($this->did);
+			}
+		}
+	}
 
 	protected function getSession() {
 		if ($this->session) {
