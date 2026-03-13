@@ -156,7 +156,7 @@ class BlueskyContentService {
     }
     
     public function logout(){
-    	$atprotoClient->logout();
+    	$this->atprotoClient->logout();
     }
     
 
