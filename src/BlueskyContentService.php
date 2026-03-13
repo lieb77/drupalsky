@@ -154,6 +154,11 @@ class BlueskyContentService {
             return $feed->getFeed();
         }
     }
+    
+    public function logout(){
+    	$atprotoClient->logout();
+    }
+    
 
     /**
      * Parse post
