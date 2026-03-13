@@ -1,20 +1,39 @@
 services:
  
+  logger.channel.drupalsky:
+    parent: logger.channel_base
+    arguments: ['drupalsky']
+    
   drupalsky.endpoints:
     class: Drupal\drupalsky\EndPoints
 
   drupalsky.atprotoservice:
     class: Drupal\drupalsky\AtprotoClientService
-    arguments: ['@logger.factory', '@config.factory', '@key.repository', '@http_client', '@tempstore.private', '@drupalsky.endpoints']
+    arguments:
+      - '@logger.channel.drupalsky'
+      - '@config.factory'
+      - '@key.repository'
+      - '@http_client'
+      - '@tempstore.private'
+      - '@drupalsky.endpoints'
 
   drupalsky.bskyservice:
     class: Drupal\drupalsky\BlueskyContentService
-    arguments: ['@drupalsky.atprotoservice', '@drupalsky.endpoints']
+    arguments:
+      - '@drupalsky.atprotoservice'
+      - '@drupalsky.endpoints'
 
   drupalsky.pdsreposervice:
     class: Drupal\drupalsky\PdsRepositoryService
-    arguments: ['@drupalsky.atprotoservice', '@drupalsky.endpoints']
+    arguments:
+      - '@drupalsky.atprotoservice'
+      - '@drupalsky.endpoints'
  
   Drupal\drupalsky\Hook\DrupalSkyHooks:
     class: Drupal\drupalsky\Hook\DrupalSkyHooks
-    arguments: ['@drupalsky.pdsreposervice']
+    arguments: 
+      - '@drupalsky.pdsreposervice'
+      - '@state'
+      - '@datetime.time'
+      - '@date.formatter'
+      - '@logger.channel.drupalsky'

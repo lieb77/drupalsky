@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\drupalsky;
 
 use Drupal\Core\Config\ImmutableConfig;
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\key\KeyRepositoryInterface;
 Use Drupal\Core\TempStore\PrivateTempStoreFactory;
@@ -23,7 +23,6 @@ class AtprotoClientService {
      * @var 
      *
      */
-	protected $logger;
 	protected $settings; // Immutable settings snapshot
 	protected ?string $did;
 	protected ?string $handle;
@@ -32,14 +31,14 @@ class AtprotoClientService {
 	protected string $pdsUrl = "https://banjo.paullieberman.org";
 	
 	public function __construct(
-		protected LoggerChannelFactoryInterface $loggerFactory,
-		protected ConfigFactoryInterface       $configFactory,
-		protected KeyRepositoryInterface       $keyRepository,
-		protected ClientInterface              $httpClient,
-		PrivateTempStoreFactory                $tempStore,
-		protected EndPoints                    $endpoints
+		protected LoggerChannelInterface   $logger,
+		protected ConfigFactoryInterface   $configFactory,
+		protected KeyRepositoryInterface   $keyRepository,
+		protected ClientInterface          $httpClient,
+		PrivateTempStoreFactory            $tempStore,
+		protected EndPoints                 $endpoints
 		) {
-			$this->logger    = $loggerFactory->get('drupalsky');
+		
 			$this->tempstore = $tempStore->get('drupalsky');
 			
 			// Use the Factory to get our immutable settings
