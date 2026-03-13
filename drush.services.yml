@@ -1,6 +1,0 @@
-services:
- drupalsky.commands:
-    class: \Drupal\drupalsky\Drush\Commands\SyncDrushCommands
-    arguments: ['@entity_type.manager', '@drupalsky.pdsreposervice' ]
-    tags:
-      - { name: drush.command }

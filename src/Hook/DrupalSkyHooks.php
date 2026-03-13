@@ -6,33 +6,11 @@ namespace Drupal\drupalsky\Hook;
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\node\NodeInterface;
-use Drupal\drupalsky\PdsRepositoryService;
-use Drupal\Core\State\StateInterface;
-use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Logger\LoggerChannelInterface;
-use Drupal\Core\Datetime\DateFormatterInterface;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Form\FormStateInterface;
 
 /**
  *
  */
 class DrupalSkyHooks {
-
-    /*
-	 * Constructor
-	 *
-	 */
-	public function __construct(
-		protected PdsRepositoryService $pdsRepository,
-	    protected StateInterface $state,
-    	protected TimeInterface $time,
-    	protected DateFormatterInterface $dateFormatter,
-    	protected LoggerChannelInterface $logger,
-    	
-	){}
-
 
     /**
      * Implements hook_help().
@@ -58,49 +36,6 @@ class DrupalSkyHooks {
         }
     }
 
-	
-	/**
-	 * Implements hook_node_insert().
-	 */	
-	#[Hook('node_insert')]
-	#[Hook('node_update')]
-	public function syncRideToPds(NodeInterface $node): void {
-		if ($node->bundle() !== 'ride') {
-			return;
-		}
-		
-		$result = $this->pdsRepository->syncRide($node);
-		
-		if ($result) {
-			// Use the injected services instead of static calls
-			$this->state->set('drupalsky.sync.' . $node->id(), $this->time->getRequestTime());
-			
-			$this->logger->info('Synced ride @id to PDS.', ['@id' => $node->id()]);
-		}
-	}
-		
-	#[Hook('node_delete')]
-	public function deleteRideCleanup(NodeInterface $node): void {
-		if ($node->bundle() === 'ride') {
-			// Cleanup the state entry when the node is gone
-			$this->state->delete('drupalsky.sync.' . $node->id());
-		}
-	}
-	
-	#[Hook('entity_prepare_form')]
-	public function showSyncStatusOnForm(EntityInterface $entity, $operation, FormStateInterface $form_state): void {
-		if ($entity->bundle() === 'ride' && $operation === 'edit') {
-			$last_sync = $this->state->get('drupalsky.sync.' . $entity->id());
-		
-			if ($last_sync) {
-				  $date = $this->dateFormatter->format($last_sync, 'short');
-				  // This appears in the message area only during this form load
-		 	 	\Drupal::messenger()->addStatus(t('PDS Sync Status: Last pushed on @date.', ['@date' => $date]));
-			} else {
-		  	\Drupal::messenger()->addWarning(t('This ride has not been synced to the PDS yet.'));
-			}
-		}
-	}
-	
+
 // End of class.
 }

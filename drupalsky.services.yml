@@ -23,17 +23,6 @@ services:
       - '@drupalsky.atprotoservice'
       - '@drupalsky.endpoints'
 
-  drupalsky.pdsreposervice:
-    class: Drupal\drupalsky\PdsRepositoryService
-    arguments:
-      - '@drupalsky.atprotoservice'
-      - '@drupalsky.endpoints'
- 
   Drupal\drupalsky\Hook\DrupalSkyHooks:
     class: Drupal\drupalsky\Hook\DrupalSkyHooks
-    arguments: 
-      - '@drupalsky.pdsreposervice'
-      - '@state'
-      - '@datetime.time'
-      - '@date.formatter'
-      - '@logger.channel.drupalsky'
+
