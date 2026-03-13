@@ -50,7 +50,11 @@ class AtprotoClientService {
         $this->settings     = $configFactory->get('drupalsky.settings');
         $this->tempstore    = $tempStore->get('drupalsky');
         $this->handle       = $this->settings->get('handle');
-		$this->did          = $this->getDidForHandle($this->handle);
+		$this->did          = $this->settings->get('did');
+		if (empty($this->did)){
+			$this->did = $this->getDidForHandle($this->handle);
+			$this->saveDid($this->did);
+		}		
     }
 
 
@@ -59,6 +63,11 @@ class AtprotoClientService {
 			return $this->session;
 		}
 		
+		$appKey = $this->settings->get('app_key');
+		if (empty($this->$handle) || empty($appKey)) {
+   			 return FALSE; 
+  		}
+		
 		$session = $this->tempstore->get('session');
 		
 		if ($session) {
@@ -66,8 +75,7 @@ class AtprotoClientService {
 		} 
 		
 		if (!$this->session) {
-			$app_key_name = $this->settings->get('app_key');
-			$key = $this->keyRepository->getKey($app_key_name)->getKeyValue();
+			$key = $this->keyRepository->getKey($appKey)->getKeyValue();
 			$this->session = $this->createSession($this->handle, $key);
 		}
 		
@@ -134,6 +142,11 @@ class AtprotoClientService {
    
 
 	/*************** Private functions *******************/
+	private function saveDid(string $did) {
+ 		 $this->configFactory->getEditable('drupalsky.settings')
+    		->set('did', $did)
+    		->save();
+    }
 
     /**
      * Create authenicated sessionm
@@ -197,7 +210,9 @@ class AtprotoClientService {
      */
     public function getDidForHandle($handle)
     {
-
+		if (empty($handle)) {
+     	   return FALSE;
+    	}
         $request = $this->httpClient->request(
             'GET',
             "https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile", [

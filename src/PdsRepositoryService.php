@@ -6,6 +6,8 @@ namespace Drupal\drupalsky;
 
 use Drupal\node\NodeInterface;
 use Drupal\node\Entity\Node;
+use Drupal\Core\Mail\MailFormatHelper;
+
 use Drupal\drupalsky\AtprotoClientService;
 use Drupal\drupalsky\Endpoints;
 
@@ -30,7 +32,7 @@ class PdsRepositoryService {
 			'date'  => date('c', $node->getCreatedTime()),
 			'bike'  => $bikeName,
 			'url'   => $node->toUrl('canonical', ['absolute' => TRUE])->toString(),
-			'body'  => $node->body->value,
+			'body'  => MailFormatHelper::htmlToText($node->body->value),
 		];
 		
 		return $this->atprotoClient->request('POST', $this->endpoints->putRecord(), [

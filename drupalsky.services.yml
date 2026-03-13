@@ -1,22 +1,20 @@
 services:
-  Drupal\drupalsky\Hook\DrupalSkyHooks:
-    class: Drupal\drupalsky\Hook\DrupalSkyHooks
-    arguments: ['@drupalsky.pdsreposervice']
-
+ 
   drupalsky.endpoints:
     class: Drupal\drupalsky\EndPoints
 
   drupalsky.atprotoservice:
     class: Drupal\drupalsky\AtprotoClientService
-    lazy: true
     arguments: ['@logger.factory', '@config.factory', '@key.repository', '@http_client', '@tempstore.private', '@drupalsky.endpoints']
 
   drupalsky.bskyservice:
     class: Drupal\drupalsky\BlueskyContentService
-    lazy: true
     arguments: ['@drupalsky.atprotoservice', '@drupalsky.endpoints']
 
   drupalsky.pdsreposervice:
     class: Drupal\drupalsky\PdsRepositoryService
-    lazy: true
     arguments: ['@drupalsky.atprotoservice', '@drupalsky.endpoints']
+ 
+  Drupal\drupalsky\Hook\DrupalSkyHooks:
+    class: Drupal\drupalsky\Hook\DrupalSkyHooks
+    arguments: ['@drupalsky.pdsreposervice']
