@@ -24,6 +24,7 @@ class AtprotoClientService {
      *
      */
     protected $settings;      // Drupal\Core\Config\ConfigFactoryInterface
+    protected $configFactory; // Drupal\Core\Config\ConfigFactoryInterface
     protected $logger;        // Drupal\Core\Logger\LoggerChannelFactoryInterface
     protected $httpClient;    // GuzzleHttp\ClientInterface
     protected $endpoints;     // Drupal\drupalsky\EndPoints
@@ -44,13 +45,14 @@ class AtprotoClientService {
         PrivateTempStoreFactory       $tempStore,
         EndPoints                     $endpoints
     ) {
-        $this->logger       = $loggerFactory->get('drupalsky');
-        $this->endpoints    = $endpoints;
-        $this->httpClient   = $http_client;
-        $this->settings     = $configFactory->get('drupalsky.settings');
-        $this->tempstore    = $tempStore->get('drupalsky');
-        $this->handle       = $this->settings->get('handle');
-		$this->did          = $this->settings->get('did');
+    	$this->configFactory = $configFactory;
+        $this->logger        = $loggerFactory->get('drupalsky');
+        $this->endpoints     = $endpoints;
+        $this->httpClient    = $http_client;
+        $this->settings      = $configFactory->get('drupalsky.settings');
+        $this->tempstore     = $tempStore->get('drupalsky');
+        $this->handle        = $this->settings->get('handle');
+		$this->did           = $this->settings->get('did');
 		if (empty($this->did)){
 			$this->did = $this->getDidForHandle($this->handle);
 			$this->saveDid($this->did);
@@ -64,7 +66,7 @@ class AtprotoClientService {
 		}
 		
 		$appKey = $this->settings->get('app_key');
-		if (empty($this->$handle) || empty($appKey)) {
+		if (empty($this->handle) || empty($appKey)) {
    			 return FALSE; 
   		}
 		
