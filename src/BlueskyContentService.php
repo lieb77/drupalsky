@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Drupal\drupalsky;
 
 
-use Drupal\drupalsky\AtprotoClientService;
-use Drupal\drupalsky\EndPoints;
+use Drupal\atproto_client\AtprotoClient;
 use Drupal\drupalsky\Model\Profile;
 use Drupal\drupalsky\Model\People;
 use Drupal\drupalsky\Model\Feed;
@@ -24,8 +23,7 @@ class BlueskyContentService {
 	protected $did;
 
     public function __construct(
-    	protected AtprotoClientService $atprotoClient,
-    	protected EndPoints $endpoints
+    	protected AtprotoClient $atprotoClient,
     ){
     	$this->handle = $atprotoClient->getHandle();
     	$this->did    = $atprotoClient->getDid();
@@ -37,10 +35,7 @@ class BlueskyContentService {
      */
     public function getProfile()
     {
-        $endpoint = $this->endpoints->getProfile();
-        $query    = ['query' => ['actor' => $this->handle]];
-        $data     = $this->atprotoClient->request('GET', $endpoint, $query);
-
+        $data    = $this->atprotoClient->getProfile(['actor' => $this->handle]);
         $profile = new Profile($data);
         return $profile->getProfile();
     }
@@ -50,11 +45,7 @@ class BlueskyContentService {
      */
     public function getFollowers()
     {
-
-        $endpoint  = $this->endpoints->getFollowers();
-        $query     = ['query' => ['actor' => $this->handle]];
-        $data      = $this->atprotoClient->request('GET', $endpoint, $query);
-
+        $data   = $this->atprotoClient->getFollowers(['actor' => $this->handle]);
         $people = new People($data->followers);
         return $people->getPeople();
     }
@@ -64,11 +55,7 @@ class BlueskyContentService {
      */
     public function getFollows()
     {
-
-        $endpoint = $this->endpoints->getFollows();
-        $query    = ['query' => ['actor' => $this->handle]];
-        $data      = $this->atprotoClient->request('GET', $endpoint, $query);
-
+		$data   = $this->atprotoClient->getFollows(['actor' => $this->handle]);
         $people = new People($data->follows);
         return $people->getPeople();
 
@@ -80,11 +67,7 @@ class BlueskyContentService {
      */
     public function getTimeline()
     {
-
-        $endpoint = $this->endpoints->getTimeline();
-        $query    = ['query' => ['actor' => $this->handle]];
-        $data     = $this->atprotoClient->request('GET', $endpoint, $query);
-
+		$data = $this->atprotoClient->getTimeline(['actor' => $this->handle]);
         $feed = new Feed($data->feed);
         return $feed->getFeed();
 
@@ -95,31 +78,12 @@ class BlueskyContentService {
      */
     public function getPosts()
     {
-
-        $endpoint = $this->endpoints->getAuthorFeed();
-        $query    = ['query' => ['actor' => $this->handle]];
-        $data     = $this->atprotoClient->request('GET', $endpoint, $query);
-
+		$data = $this->atprotoClient->getAuthorFeed(['actor' => $this->handle]);
         $feed = new Feed($data->feed);
         return $feed->getFeed();
     }
 
-    /**
-     * Get Rides
-     */
-    public function getRides()
-    {
-        $endpoint = $this->endpoints->listRecords();
-        $query = ['query' => [
-        	'repo' => $this->did,
-        	'collection' => 'net.paullieberman.bike.ride'
-        ]];
-        $data  = $this->atprotoClient->request('GET', $endpoint, $query);
-		$rides = new Rides($data->records);
-		return $rides->getRides();
-    }
-
-
+   
     /**
      * Search Posts
      *
@@ -128,11 +92,7 @@ class BlueskyContentService {
      */
     public function searchPosts($keyword)
     {
-        $feed = [];
-        $endpoint = $this->endpoints->searchPosts();
-        $query    = ['query' => ['q' => $keyword]];
-        $data     = $this->atprotoClient->request('GET', $endpoint, $query);
-
+		$data = $this->atprotoClient->searchPosts(['q' => $keyword]);
         $feed = new Feed($data->posts);
         return $feed->getFeed();
     }
@@ -145,11 +105,8 @@ class BlueskyContentService {
     public function getThread($parent)
     {
         if (preg_match('/([^\/]+)\|([^\/]+)/', $parent, $matches)) {
-            $uri = "at://did:plc:" . $matches[1] . "/app.bsky.feed.post/" . $matches[2];
-
-            $endpoint = $this->endpoints->getPostThread();
-            $query    = ['query' => ['actor' => $this->handle,'uri' => $uri ]];
-            $data     = $this->atprotoClient->request('GET', $endpoint, $query);
+            $uri  = "at://did:plc:" . $matches[1] . "/app.bsky.feed.post/" . $matches[2];
+			$data = $this->atprotoClient->getPostThread(['actor' => $this->handle,'uri' => $uri ]);
             $feed = new Thread($data);
             return $feed->getFeed();
         }

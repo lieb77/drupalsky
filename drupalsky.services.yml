@@ -4,24 +4,10 @@ services:
     parent: logger.channel_base
     arguments: ['drupalsky']
     
-  drupalsky.endpoints:
-    class: Drupal\drupalsky\EndPoints
-
-  drupalsky.atprotoservice:
-    class: Drupal\drupalsky\AtprotoClientService
-    arguments:
-      - '@logger.channel.drupalsky'
-      - '@config.factory'
-      - '@key.repository'
-      - '@http_client'
-      - '@tempstore.private'
-      - '@drupalsky.endpoints'
-
   drupalsky.bskyservice:
     class: Drupal\drupalsky\BlueskyContentService
     arguments:
-      - '@drupalsky.atprotoservice'
-      - '@drupalsky.endpoints'
+      - '@atproto_client.atproto_client'
 
   Drupal\drupalsky\Hook\DrupalSkyHooks:
     class: Drupal\drupalsky\Hook\DrupalSkyHooks
