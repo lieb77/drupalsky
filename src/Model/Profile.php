@@ -13,7 +13,6 @@ class Profile {
   protected $profile;
 
   public function __construct($data) {
-  dpm($data);
     $this->profile = [
       'displayName' => !empty($data->displayName) ? $data->displayName : "",
       'handle' => $data->handle,

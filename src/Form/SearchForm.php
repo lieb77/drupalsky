@@ -99,7 +99,6 @@ final class SearchForm extends FormBase {
 
     $keyword = $form_state->getValue('keyword');
     $posts = $this->service->searchPosts($keyword);
-    // dpm($posts);
     $form_state->set('posts', $posts);
     $form_state->setRebuild(TRUE);
   }

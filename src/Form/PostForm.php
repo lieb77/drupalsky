@@ -94,8 +94,6 @@ final class PostForm extends FormBase {
      */
     public function submitForm(array &$form, FormStateInterface $form_state): void {
 
-        //dpm($form_state->getValues());
-
         $form_state->setRebuild(TRUE);
     }
 
