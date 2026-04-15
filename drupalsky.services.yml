@@ -7,7 +7,7 @@ services:
   drupalsky.bskyservice:
     class: Drupal\drupalsky\BlueskyContentService
     arguments:
-      - '@atproto_client.atproto_client'
+      - '@atproto_client.service'
 
   Drupal\drupalsky\Hook\DrupalSkyHooks:
     class: Drupal\drupalsky\Hook\DrupalSkyHooks

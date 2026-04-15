@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\drupalsky;
 
 
-use Drupal\atproto_client\Client\AtprotoClient;
+use Drupal\atproto_client\AtprotoClientService;
 use Drupal\drupalsky\Model\Profile;
 use Drupal\drupalsky\Model\People;
 use Drupal\drupalsky\Model\Feed;
@@ -23,9 +23,9 @@ class BlueskyContentService {
 	protected $did;
 
     public function __construct(
-    	protected AtprotoClient $atprotoClient,
+    	protected AtprotoClientService $atprotoClient,
     ){
-    	$this->handle = $atprotoClient->getHandle();
+    	$this->handle = "paullieberman.net";
     	$this->did    = $atprotoClient->getDid();
     }
      
