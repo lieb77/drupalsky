@@ -1,0 +1,239 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\drupalsky;
+
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\atmosphere\Service\ApiClient;
+use Drupal\atmosphere\Service\ConnectionManager;
+use Drupal\drupalsky\EndPoints;
+use Drupal\drupalsky\Model\Profile;
+use Drupal\drupalsky\Model\People;
+use Drupal\drupalsky\Model\Feed;
+use Drupal\drupalsky\Model\Thread;
+
+
+/**
+ *
+ */
+class DrupalSky
+{
+	protected $logger;
+	protected $did;
+	protected $handle;
+
+    public function __construct(
+        LoggerChannelFactoryInterface $loggerFactory,
+        private readonly EndPoints $endpoints,
+        private readonly ApiClient $apiClient,
+        private readonly ConnectionManager $connectionManager,
+    ) {
+        $this->logger  = $loggerFactory->get('drupalsky');
+        $this->did     = $connectionManager->getDid();
+        $this->handle  = $connectionManager->getHandle();
+    }
+
+    /**
+     * getProfile
+     */
+    public function getProfile()
+    {
+
+        $endpoint = $this->endpoints->getProfile();
+        $query    = ['actor' => $this->handle];
+        $data     = $this->apiClient->get($endpoint, $query);
+
+        $profile = new Profile($data);
+        return $profile->getProfile();
+    }
+
+    /**
+     * Get followers
+     */
+    public function getFollowers()
+    {
+
+        $endpoint  = $this->endpoints->getFollowers();
+        $query     = ['actor' => $this->handle];
+        $data      = $this->makeAuthCall($endpoint, $query);
+
+        $people = new People($data->followers);
+        return $people->getPeople();
+    }
+
+    /**
+     * Get follows
+     */
+    public function getFollows()
+    {
+
+        $endpoint = $this->endpoints->getFollows();
+        $query    = ['actor' => $this->handle];
+        $data      = $this->makeAuthCall($endpoint, $query);
+
+        $people = new People($data->follows);
+        return $people->getPeople();
+
+    }
+
+
+    /**
+     * getTimeline
+     */
+    public function getTimeline()
+    {
+
+        $endpoint = $this->endpoints->getTimeline();
+        $query    = ['actor' => $this->handle];
+        $data     = $this->makeAuthCall($endpoint, $query);
+
+        $feed = new Feed($data->feed);
+        return $feed->getFeed();
+
+    }
+
+    /**
+     * Get Posts
+     */
+    public function getPosts()
+    {
+
+        $endpoint = $this->endpoints->getAuthorFeed();
+        $query    = ['actor' => $this->handle];
+        $data     = $this->makeAuthCall($endpoint, $query);
+
+        $feed = new Feed($data->feed);
+        return $feed->getFeed();
+    }
+
+
+    /**
+     * Search Posts
+     *
+     * @var
+     *   string $keyword
+     */
+    public function searchPosts($keyword)
+    {
+        $feed = [];
+        $endpoint = $this->endpoints->searchPosts();
+        $query    = ['q' => $keyword];
+        $data     = $this->makeAuthCall($endpoint, $query);
+
+        $feed = new Feed($data->posts);
+        return $feed->getFeed();
+    }
+
+
+
+    /**
+     * Get thread
+     */
+    public function getThread($parent)
+    {
+        if (preg_match('/([^\/]+)\|([^\/]+)/', $parent, $matches)) {
+            $uri = "at://did:plc:" . $matches[1] . "/app.bsky.feed.post/" . $matches[2];
+
+            $endpoint = $this->endpoints->getPostThread();
+            $query    = ['actor' => $this->handle,'uri' => $uri ];
+            $data     = $this->makeAuthCall($endpoint, $query);
+            $feed = new Thread($data);
+            return $feed->getFeed();
+        }
+    }
+
+    /**
+     * Parse post
+     *
+     * Return array
+     */
+    private function parsePost($post)
+    {
+
+        $ext  = [];
+        $parent = '';
+
+        if (isset($post->embed->images)) {
+            $image = $post->embed->images[0];
+            $ext = [
+            'thumb' => $image->thumb,
+            'alt'   => $image->alt,
+            ];
+        }
+        elseif (isset($post->embed->external)) {
+            $ext = $post->embed->external;
+        }
+
+        if (isset($post->record->reply)) {
+            $parent = $post->record->reply->parent->uri;
+        }
+
+        return [
+        'author' => !empty($post->author->displayName) ? $post->author->displayName : "",
+        'avatar' => !empty($post->author->avatar) ? $post->author->avatar : null,
+        'date'   => $this->getDate($post->record->createdAt),
+        'text'   => $post->record->text,
+        'url'  => $this->atUriToBskyAppUrl($post->uri),
+        'ext'      => $ext,
+        'parent' => $parent,
+        ];
+    }
+
+
+    /**
+     * Get blob
+     *
+     * No idea yet
+     */
+    private function getBlob($cid, $did)
+    {
+    }
+
+
+    /**
+     * getDid
+     *
+     * Gets DID for Handle
+     */
+    private function getDid($handle)
+    {
+
+        $request = $this->httpClient->request(
+            'GET',
+            "https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile", [
+            'query' => [
+            'actor' => $handle,
+            ],
+            ]
+        );
+
+        if ($request->getStatusCode() == 200) {
+            $profile = json_decode($request->getBody()->getContents());
+            return($profile->did);
+        }
+        return FLASE;
+    }
+
+
+    /**
+     * getPds for DID
+     *
+     * Uses plc.directory
+     */
+    private function getPds($did)
+    {
+        $request = $this->httpClient->request('GET', "https://plc.directory/" . $did);
+        if ($request->getStatusCode() == 200) {
+            $results = json_decode($request->getBody()->getContents());
+            return $results->service[0]->serviceEndpoint;
+        }
+        return FLASE;
+    }
+
+
+
+
+
+    // End of class
+}

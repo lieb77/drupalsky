@@ -1,14 +1,14 @@
 services:
- 
-  logger.channel.drupalsky:
-    parent: logger.channel_base
-    arguments: ['drupalsky']
-    
-  drupalsky.bskyservice:
-    class: Drupal\drupalsky\BlueskyContentService
-    arguments:
-      - '@atproto_client.service'
-
   Drupal\drupalsky\Hook\DrupalSkyHooks:
     class: Drupal\drupalsky\Hook\DrupalSkyHooks
+    autowire: true
 
+  drupalsky.endpoints:
+    class: Drupal\drupalsky\EndPoints
+
+  drupalsky.service:
+    class: Drupal\drupalsky\DrupalSky
+    arguments: 
+      - '@logger.factory'
+      - '@drupalsky.endpoints'
+      - '@atmosphere.api_client'
